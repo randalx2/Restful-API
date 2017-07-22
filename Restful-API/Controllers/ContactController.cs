@@ -52,20 +52,15 @@ namespace Restful_API.Controllers
         }
 
         // PUT: api/Contact/5
-        public IHttpActionResult Put(Contacts contact)
+        public IEnumerable<Contacts> Put(int id, [FromBody]Contacts changedContact)
         {
-            //Get the first contact in the contacts list with the specified id
-            //Contacts contact = contacts.FirstOrDefault<Contacts>(c => c.Id == id);
-
-            if(contact == null)
+            Contacts contact = contacts.FirstOrDefault<Contacts>(c => c.Id == id);
+            if(contact != null)
             {
-                return NotFound();
+                contact.FirstName = changedContact.FirstName;
+                contact.LastName = changedContact.LastName;
             }
-
-            //contact.FirstName = firstName;
-            //contact.LastName = lastName;
-
-            return Ok(contact);
+            return contacts;
         }
 
         // DELETE: api/Contact/5
@@ -73,13 +68,6 @@ namespace Restful_API.Controllers
         {
             //Get the first contact in the contacts list with the specified id
             Contacts contact = contacts.FirstOrDefault<Contacts>(c => c.Id == id);
-
-            /*
-            if(contact == null)
-            {
-                return NotFound();
-            }
-            */
 
             //Change contacts to a list
             List<Contacts> contactList = contacts.ToList<Contacts>();
