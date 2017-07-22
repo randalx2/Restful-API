@@ -40,19 +40,28 @@ namespace Restful_API.Controllers
 
         // PUT: api/ContactsEF/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutContacts(int id, Contacts contacts)
+        [Route("{id:int}")]
+        public IHttpActionResult PutContacts(int id, Contacts changedContact)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != contacts.Id)
+            if (id != changedContact.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(contacts).State = EntityState.Modified;
+            db.Entry(changedContact).State = EntityState.Modified;
+
+            Contacts contact = db.Contacts.FirstOrDefault<Contacts>(c => c.Id == id);
+
+            if (contact != null)
+            {
+                contact.FirstName = changedContact.FirstName;
+                contact.LastName = changedContact.LastName;
+            }
 
             try
             {
@@ -70,7 +79,7 @@ namespace Restful_API.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(contact);
         }
 
         // POST: api/ContactsEF
@@ -86,11 +95,12 @@ namespace Restful_API.Controllers
             db.Contacts.Add(contacts);
             db.SaveChanges();
 
-            return Ok(contacts)
+            return Ok(contacts);
         }
 
         // DELETE: api/ContactsEF/5
         [ResponseType(typeof(Contacts))]
+        [Route("{id:int}")]
         public IHttpActionResult DeleteContacts(int id)
         {
             Contacts contacts = db.Contacts.Find(id);
