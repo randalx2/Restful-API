@@ -14,11 +14,15 @@ namespace Restful_API
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+
+            //Removing attribute table so we can use routing
+            /*
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            */
         }
     }
 }
